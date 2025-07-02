@@ -32,6 +32,7 @@ services:
       /usr/bin/mc alias set dockerminio http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
       /usr/bin/mc mb dockerminio/${LOGS_BUCKET};
       /usr/bin/mc mb dockerminio/${STG_BUCKET};
+      /usr/bin/mc mb dockerminio/extracted-data;
       exit 0;
       "
     networks:
