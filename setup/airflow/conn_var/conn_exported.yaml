@@ -1,0 +1,63 @@
+minio:
+  conn_type: aws
+  description: ''
+  extra: '{"endpoint_url": "minio:9000"}'
+  host: ''
+  login: minio
+  password: minio123
+  port: null
+  schema: ''
+minio_src:
+  conn_type: aws
+  description: ''
+  extra: '{"endpoint_url": "api-pipeline.minio-devops-class.pacmann.ai"}'
+  host: ''
+  login: i4C7n2fleXO2Ww9W0FO3
+  password: yax0SPomLpC4elcvN0hLtcLWeod4PtcUwqdHvhoG
+  port: null
+  schema: ''
+s3-conn:
+  conn_type: aws
+  description: ''
+  extra: '{"endpoint_url": "http://minio:9000"}'
+  host: ''
+  login: minio
+  password: minio123
+  port: null
+  schema: ''
+slack-notifier:
+  conn_type: http
+  description: ''
+  extra: ''
+  host: ''
+  login: ''
+  password: https://hooks.slack.com/services/
+  port: null
+  schema: ''
+source-conn:
+  conn_type: postgres
+  description: ''
+  extra: ''
+  host: data_source_db
+  login: postgres
+  password: postgres
+  port: 5432
+  schema: investment
+staging-conn:
+  conn_type: postgres
+  description: ''
+  extra: ''
+  host: staging_db
+  login: postgres
+  password: postgres
+  port: 5432
+  schema: staging
+warehouse-conn:
+  conn_type: postgres
+  description: ''
+  extra: ''
+  host: warehouse_db
+  login: postgres
+  password: postgres
+  port: 5432
+  schema: warehouse

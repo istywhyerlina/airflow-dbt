@@ -1,0 +1,15 @@
+{
+    "incremental": "False",
+    "src_api_url": "https://api-milestones.vercel.app/api/data?",
+    "src_bucket": "file-source",
+    "tables_to_extract": "['company','ipos','funding_rounds', 'funds', 'acquisition','investments']",
+    "tables_to_load": {
+        "acquisition": "acquisition_id",
+        "company": "office_id",
+        "funding_rounds": "funding_round_id",
+        "funds": "fund_id",
+        "investments": "investment_id",
+        "ipos": "ipo_id"
+    },
+    "tables_to_transform": "['dim_aircrafts', 'dim_airport', 'dim_passenger', 'dim_seat', 'fct_boarding_pass', 'fct_booking_ticket', 'fct_flight_activity', 'fct_seat_occupied_daily']"
+}
