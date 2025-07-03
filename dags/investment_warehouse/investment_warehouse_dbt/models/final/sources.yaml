@@ -1,0 +1,14 @@
+version 2:
+
+sources:
+  - name: staging
+    database: postgres
+    schema: staging
+    tables:
+      - name: acquisition
+      - name: company
+      - name: funding_rounds
+      - name: funds
+      - name: investments
+      - name: ipos
+      - name: milestone

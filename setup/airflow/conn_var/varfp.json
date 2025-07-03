@@ -1,0 +1,32 @@
+
+{
+    "MILESTONE_API_URL": "https://api-milestones.vercel.app/api/data?start_date=2008-06-09&end_date=2011-06-16",
+    "INVESTMENT_INCREMENTAL_MODE": "False",
+    "INVESTMENT_WAREHOUSE_INIT": "True",
+    "INVESTMENT__table_to_extract_and_load": {
+        "company": [
+          "public",
+          "office_id"
+        ],
+        "acquisition": [
+          "public",
+          "acquisition_id"
+        ],
+        "ipos": [
+          "public",
+          "ipo_id"
+        ],
+        "funds": [
+          "public",
+          "fund_id"
+        ],
+        "funding_rounds": [
+          "public",
+          "funding_round_id"
+        ],
+        "investments": [
+          "public",
+          "investment_id"
+        ]
+    }
+}

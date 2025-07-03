@@ -1,0 +1,29 @@
+version: '1'
+services:  
+  source-db:
+    image: postgres:latest
+    container_name: sourcesfp
+    environment:
+      POSTGRES_USER: ${SOURCE_DB_USER}
+      POSTGRES_PASSWORD: ${SOURCE_DB_PASSWORD}
+      POSTGRES_DB: ${SOURCE_DB_NAME}
+    ports:
+      - 5443:5432
+    volumes:
+      - ./init/:/docker-entrypoint-initdb.d
+      - source-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${SOURCE_DB_USER}"]
+      interval: 5s
+    restart: always
+    networks:
+      - airflow-networks
+
+volumes:
+  source-db:
+    driver: local
+    name: source-db
+
+networks:
+  airflow-networks:
+    external: True

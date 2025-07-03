@@ -1,0 +1,65 @@
+# This file contains the connection configurations for various services used in the Pactravel project. Wil be added to CLI
+source-api:
+  conn_type: http
+  description: milestones api
+  extra: ''
+  host: https://api-milestones.vercel.app/api/data?start_date=2008-06-09&end_date=2011-06-16
+  login: ''
+  password: null
+  port: null
+  schema: ''
+source-fp:
+  conn_type: postgres
+  description: data source from posgres database
+  extra: ''
+  host: sourcesfp
+  login: postgres
+  password: postgres
+  port: 5432
+  schema: postgres
+s3-conn:
+  conn_type: aws
+  description: Koneksi ke minio / s3 (data lake)
+  extra: '{"endpoint_url": "http://minio:9000"}'
+  host: ''
+  login: minio
+  password: minio123
+  port: null
+  schema: ''
+slack_conn:
+  conn_type: slack
+  description: Alerting
+  extra: '{"timeout": null}'
+  host: ''
+  login: ''
+  password:                         # Fill the token here
+  port: null
+  schema: ''
+warehouse-fp:
+  conn_type: postgres
+  description: Koneksi ke data warehouse
+  extra: '{}'
+  host: warehousefp
+  login: postgres
+  password: postgres
+  port: 5432
+  schema: postgres
+minio:
+  conn_type: aws
+  description: ''
+  extra: '{"endpoint_url": "minio:9000"}'
+  host: ''
+  login: minio
+  password: minio123
+  port: null
+  schema: ''
+slack-notifier:
+  conn_type: http
+  description: ''
+  extra: ''
+  host: ''
+  login: ''
+  password: "https://hooks.slack.com/services/"
+  port: null
+  schema: ''
+
