@@ -22,7 +22,7 @@ default_args = {
         channel="airflow-notifications",
         text="There is an ERROR")}
 
-DBT_PROJECT_PATH = f"{os.environ['AIRFLOW_HOME']}/dags/bikes_store_warehouse/bikes_store_warehouse_dbt"
+DBT_PROJECT_PATH = f"{os.environ['AIRFLOW_HOME']}/dags/investment_warehouse/investment_warehouse_dbt"
 
 project_config = ProjectConfig(
     dbt_project_path=DBT_PROJECT_PATH,
@@ -34,7 +34,7 @@ profile_config = ProfileConfig(
     profile_name="warehouse",
     target_name="warehouse",
     profile_mapping=PostgresUserPasswordProfileMapping(
-        conn_id='warehouse',
+        conn_id='warehouse-fp',
         profile_args={"schema": "warehouse"}
     )
 )
@@ -56,18 +56,18 @@ render_config_init=RenderConfig(
 )
 
 @dag(
-    dag_id='bikes_store_warehouse',
+    dag_id='investment_warehouse',
     description='Extract data and load into warehouse area',
     start_date=datetime(2025, 1, 7),
     schedule=None,
     default_args=default_args
 )
 
-def bikes_store_warehouse():
+def investment_warehouse():
     @task.branch
     def check_is_warehouse_init():
-        BIKES_STORE_WAREHOUSE_INIT = eval(Variable.get('BIKES_STORE_WAREHOUSE_INIT'))
-        if BIKES_STORE_WAREHOUSE_INIT==True:
+        INVESTMENT_WAREHOUSE_INIT = eval(Variable.get('INVESTMENT_WAREHOUSE_INIT'))
+        if INVESTMENT_WAREHOUSE_INIT==True:
             return 'init_warehouse'
         else:
             return 'warehouse_pipeline'
@@ -101,4 +101,4 @@ def bikes_store_warehouse():
     )
     check_is_warehouse_init() >> [init_warehouse, warehouse_pipeline]
     
-bikes_store_warehouse()
+investment_warehouse()

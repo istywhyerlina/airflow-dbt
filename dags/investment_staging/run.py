@@ -36,9 +36,14 @@ def bikestore_staging():
     def load_stg(incremental):
         load_db(incremental=incremental) 
         load_api()        
-    trigger_profiling= TriggerDagRunOperator(task_id='trigger_profiling',trigger_dag_id='data_staging_quality',wait_for_completion=True,trigger_rule='none_failed')
+    @task_group
+    def trigger_DAGs():
+        trigger_profiling= TriggerDagRunOperator(task_id='trigger_profiling',trigger_dag_id='data_staging_quality',wait_for_completion=True,trigger_rule='none_failed')
+        trigger_warehouse= TriggerDagRunOperator(task_id='trigger_warehouse',trigger_dag_id='investment_warehouse',wait_for_completion=True,trigger_rule='none_failed')
+        trigger_profiling
+        trigger_warehouse
     #extract(incremental=incremental_mode)
-    extract(incremental=incremental_mode) >> load_stg(incremental=incremental_mode) >> trigger_profiling
+    extract(incremental=incremental_mode) >> load_stg(incremental=incremental_mode) >> trigger_DAGs()
     #load_stg(incremental=incremental_mode) >> trigger_warehouse
 
 bikestore_staging()
