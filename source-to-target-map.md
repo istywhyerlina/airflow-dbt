@@ -161,14 +161,14 @@ target : table fct_person_relationship
 ### Fact Company_Performance Table
 source : file dim_company, fact_investment, dim_fund, dim_acquisition
 
-target : table fct_person_relationship
+target : table fct_Company_Performance
 
 | Source Column                 | Target Column      | Transformation                                                   |
 |--------------------------------|-------------------|-----------------------------------------------------------------|
 | uuid generated             | `performance_id`                     | -                                                     |
 | `company_id`            | `company_id`                  | lookup to company_id in dim_company                                                     |
 | fact_investment[`funded_company_id`]            | `total_invested_company`                  | count funded_company_id group by company_id                                                      |
-| dim_fund[`fund_id`]            | `total_fund_raised_by_company`                  | count funded_company_id group by company_id                                                      |
-| dim_acquisition[`acquired_object_id`]            | `total_company_acquired`                  | count funded_company_id group by company_id                                                      |
+| dim_fund[`fund_id`]            | `total_fund_raised_by_company`                  | count fund_id group by company_id                                                      |
+| dim_acquisition[`acquired_object_id`]            | `total_company_acquired`                  | count acquired_object_id group by company_id                                                      |
 | `created_at`               | `created_at`                     |  generated as now                                                  |
 | `updated_at`               | `updated_at`                     | generated as now                                                  |
