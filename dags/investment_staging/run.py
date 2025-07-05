@@ -2,7 +2,7 @@ from airflow.decorators import dag
 from pendulum import datetime
 from airflow.providers.slack.notifications.slack import send_slack_notification
 from airflow.decorators import task_group
-from investment_staging.tasks.main import extract_db, extract_api, load_db, load_api
+from investment_staging.tasks.main import *
 from helper.callbacks.slack_notifier import slack_notifier
 from airflow.models.variable import Variable
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
@@ -31,11 +31,13 @@ def bikestore_staging():
     def extract(incremental):
         extract_db(incremental=incremental) 
         extract_api()
-
+        #extract_minio() #minio with end point api-pipeline.minio-devops-class.pacmann.ai  is not accesible yet
+        extract_csv()
     @task_group
     def load_stg(incremental):
         load_db(incremental=incremental) 
-        load_api()        
+        load_api()
+        load_csv() #minio with end point api-pipeline.minio-devops-class.pacmann.ai  is not accesible yet , use local files instead   
     @task_group
     def trigger_DAGs():
         trigger_profiling= TriggerDagRunOperator(task_id='trigger_profiling',trigger_dag_id='data_staging_quality',wait_for_completion=True,trigger_rule='none_failed')

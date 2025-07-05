@@ -52,4 +52,230 @@ models:
         tests:
           - dbt_constraints.foreign_key:
               pk_table_name: ref('dim_date')
-              pk_column_name: date_actual
+              pk_column_name: date_id
+
+
+  - name: dim_ipos
+    description: "Dimension table from ipos staging"
+    columns:
+      - name: ipo_id
+        description: "Surrogate Key for ipo"
+        tests:
+          - not_null
+          - dbt_constraints.primary_key
+
+      - name: dim_ipos.nk_ipo
+        description: "Natural Key for ipos"
+        tests:
+          - not_null
+      
+      - name: object_id
+        description: "Foreign Key to object_id"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_company')
+              pk_column_name: company_id
+
+      - name: public_at
+        description: "Foreign Key to date"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_date')
+              pk_column_name: date_id
+
+  - name: dim_fund
+    description: "Dimension table from fund staging"
+    columns:
+      - name: fund_id
+        description: "Surrogate Key for fund"
+        tests:
+          - not_null
+          - dbt_constraints.primary_key
+
+      - name: dim_fund.nk_fund
+        description: "Natural Key for fund"
+        tests:
+          - not_null
+      
+      - name: object_id
+        description: "Foreign Key to object_id"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_company')
+              pk_column_name: company_id
+
+      - name: funded_at
+        description: "Foreign Key to date"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_date')
+              pk_column_name: date_id
+
+  - name: dim_people
+    description: "Dimension table from people staging"
+    columns:
+      - name: people_id
+        description: "Surrogate Key for people"
+        tests:
+          - not_null
+          - dbt_constraints.primary_key
+
+      - name: dim_people.nk_people
+        description: "Natural Key for people"
+        tests:
+          - not_null
+
+  - name: dim_milestone
+    description: "Dimension table from milestone staging"
+    columns:
+      - name: milestone_id
+        description: "Surrogate Key for milestone"
+        tests:
+          - not_null
+          - dbt_constraints.primary_key
+
+      - name: dim_milestone.nk_milestone
+        description: "Natural Key for milestone"
+        tests:
+          - not_null
+      
+      - name: object_id
+        description: "Foreign Key to object_id"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_company')
+              pk_column_name: company_id
+
+      - name: milestone_at
+        description: "Foreign Key to date"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_date')
+              pk_column_name: date_id
+
+
+  - name: dim_funding_round
+    description: "Dimension table from funding_round staging"
+    columns:
+      - name: funding_round_id
+        description: "Surrogate Key for funding_round"
+        tests:
+          - not_null
+          - dbt_constraints.primary_key
+
+      - name: dim_funding_round.nk_funding_round
+        description: "Natural Key for funding_round"
+        tests:
+          - not_null
+      
+      - name: object_id
+        description: "Foreign Key to acquiring_object_id"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_company')
+              pk_column_name: company_id
+
+      - name: funded_at
+        description: "Foreign Key to date"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_date')
+              pk_column_name: date_id
+        
+
+
+
+
+
+  - name: fact_relationship
+    description: "Fact table from relationship staging and people"
+    columns:
+      - name: relationship_id
+        description: "Surrogate Key for relationship"
+        tests:
+          - not_null
+          - dbt_constraints.primary_key
+
+      - name: fact_relationship.nk_relationship
+        description: "Natural Key for relationship"
+        tests:
+          - not_null
+
+      - name: company_id
+        description: "Foreign Key to company"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_company')
+              pk_column_name: company_id
+
+      - name: people_id
+        description: "Foreign Key to object_id"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_people')
+              pk_column_name: people_id
+
+      - name: start_at
+        description: "Foreign Key to date"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_date')
+              pk_column_name: date_id
+
+      - name: end_at
+        description: "Foreign Key to date"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_date')
+              pk_column_name: date_id
+
+  - name: fact_investment
+    description: "Fact table from investment staging and funding round"
+    columns:
+      - name: investment_id
+        description: "Surrogate Key for investment"
+        tests:
+          - not_null
+          - dbt_constraints.primary_key
+
+      - name: fact_investment.nk_investment
+        description: "Natural Key for investment"
+        tests:
+          - not_null
+      
+      - name: funded_company_id
+        description: "Foreign Key to acquiring_object_id"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_company')
+              pk_column_name: company_id
+
+      - name: investor_company_id
+        description: "Foreign Key to acquired_object_id"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_company')
+              pk_column_name: company_id
+
+      - name: funding_round_id
+        description: "Foreign Key to funding_round"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_funding_round')
+              pk_column_name: funding_round_id
+
+  - name: fact_company_performance
+    description: "Fact table from dim_acquisition, dim_fund and fact_investment"
+    columns:
+      - name: performance_id
+        description: "Surrogate Key for performance"
+        tests:
+          - not_null
+          - dbt_constraints.primary_key
+      
+      - name: company_id
+        description: "Foreign Key to company"
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_company')
+              pk_column_name: company_id

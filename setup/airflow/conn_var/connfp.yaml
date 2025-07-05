@@ -1,4 +1,13 @@
 # This file contains the connection configurations for various services used in the Pactravel project. Wil be added to CLI
+source-minio:
+  conn_type: aws
+  description: Koneksi ke minio / s3 (data lake)
+  extra: '{"endpoint_url": "http://api-pipeline.minio-devops-class.pacmann.ai"}'
+  host: ''
+  login: i4C7n2fleXO2Ww9W0FO3
+  password: yax0SPomLpC4elcvN0hLtcLWeod4PtcUwqdHvhoG
+  port: null
+  schema: ''
 source-api:
   conn_type: http
   description: milestones api

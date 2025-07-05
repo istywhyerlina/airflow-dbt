@@ -15,6 +15,17 @@ class MinioClient:
         )
 
         return client
+
+    def _get_src():
+        minio = BaseHook.get_connection('source-minio')
+        client = Minio(
+            endpoint = minio.extra_dejson['endpoint_url'],
+            access_key = minio.login,
+            secret_key = minio.password,
+            secure = False
+        )
+
+        return client
     
    
 class CustomMinio:
@@ -47,6 +58,17 @@ class CustomMinio:
 
     def _get_dataframe(bucket_name, object_name):
         minio_client = MinioClient._get()
+        data = minio_client.get_object(
+            bucket_name = bucket_name,
+            object_name = object_name
+        )
+
+        df = pd.read_csv(data)
+
+        return df 
+    
+    def _get_source(bucket_name, object_name):
+        minio_client = MinioClient._get_src()
         data = minio_client.get_object(
             bucket_name = bucket_name,
             object_name = object_name

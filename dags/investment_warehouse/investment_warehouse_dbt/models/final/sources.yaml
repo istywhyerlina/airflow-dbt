@@ -12,3 +12,5 @@ sources:
       - name: investments
       - name: ipos
       - name: milestone
+      - name: people
+      - name: relationships

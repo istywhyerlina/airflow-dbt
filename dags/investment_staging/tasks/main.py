@@ -35,6 +35,62 @@ def extract_api():
     )
 
 @task_group
+def extract_minio():            
+    table_pkey = eval(Variable.get('MINIO__table_to_extract_and_load'))
+    table_to_extract = list(table_pkey.keys())
+
+    for table_name in table_to_extract:
+        current_task = PythonOperator(
+            task_id = f'{table_name}',
+            python_callable = Extract._src_minio,
+            trigger_rule = 'none_failed',
+            outlets = [Dataset(f's3://api-pipeline.minio-devops-class.pacmann.ai/file-source/{table_name}')],
+            op_kwargs = {
+                'table_name': f'{table_name}'
+            }
+        )
+
+        current_task
+
+@task_group
+def extract_csv():            
+    table_pkey = eval(Variable.get('MINIO__table_to_extract_and_load'))
+    table_to_extract = list(table_pkey.keys())
+
+    for table_name in table_to_extract:
+        current_task = PythonOperator(
+            task_id = f'{table_name}',
+            python_callable = Extract._src_csv,
+            trigger_rule = 'none_failed',
+            outlets = [Dataset(f'src_csv/{table_name}')],
+            op_kwargs = {
+                'table_name': f'{table_name}'
+            }
+        )
+
+        current_task
+
+@task_group
+def load_csv():            
+    table_pkey = eval(Variable.get('MINIO__table_to_extract_and_load'))
+    table_to_load = list(table_pkey.keys())
+
+    for table_name in table_to_load:
+        current_task = PythonOperator(
+            task_id = f'{table_name}',
+            python_callable = Load._minio,
+            trigger_rule = 'none_failed',
+            outlets = [Dataset(f'postgres://warehouse-fp:5432/postgres.staging.{table_name}')],
+            op_kwargs = {
+                'table_name': f'{table_name}',
+                'table_pkey': table_pkey,
+            }
+        )
+
+        current_task
+
+
+@task_group
 def load_db(incremental):
     table_pkey = eval(Variable.get('INVESTMENT__table_to_extract_and_load'))
     table_to_load = list(table_pkey.keys())

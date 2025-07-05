@@ -79,3 +79,37 @@ class Load:
         
         except Exception as e:
             raise AirflowException(f"Error when loading {table_name} : {str(e)}")
+
+    def _minio(table_name,  **kwargs):
+        try:
+            table_pkey = kwargs.get('table_pkey')
+
+            object_name = f'{table_name}.csv'
+            print(object_name)
+            bucket_name = 'extracted-data'
+            engine = create_engine(PostgresHook(postgres_conn_id='warehouse-fp').get_uri())
+
+            try:
+                df = CustomMinio._get_dataframe(bucket_name, object_name)
+                
+                print(table_pkey[table_name])
+                df = df.set_index(table_pkey[table_name])
+                
+
+                upsert(
+                    con=engine,
+                    df=df,
+                    table_name=table_name,
+                    schema='staging',
+                    if_row_exists='update'
+                )
+
+            except:
+                engine.dispose()
+                raise AirflowSkipException(f"{table_name} doesn't have new data. Skipped...")
+
+        except AirflowSkipException as e:
+            raise e
+        
+        except Exception as e:
+            raise AirflowException(f"Error when loading {table_name} : {str(e)}")

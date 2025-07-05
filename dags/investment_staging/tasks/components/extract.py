@@ -8,9 +8,26 @@ from datetime import timedelta
 import json
 import pandas as pd
 import requests
-
+BASE_PATH = "/opt/airflow/dags"
 
 class Extract:
+    @staticmethod
+    def _src_csv(table_name, **kwargs):
+        try:
+
+            df = pd.read_csv(f"{BASE_PATH}/src_csv/{table_name}.csv")
+        
+            if df.empty:
+                raise AirflowSkipException(f"{table_name} doesn't have new data. Skipped...")
+
+            bucket_name = 'extracted-data'
+            CustomMinio._put_csv(df, bucket_name, f"{table_name}.csv")
+
+        except AirflowSkipException as e:
+            raise e
+        except Exception as e:
+            raise AirflowException(f"Error when extracting {table_name} : {str(e)}")
+
     @staticmethod
     def _src_db(table_name, incremental, **kwargs):
         try:
@@ -92,3 +109,29 @@ class Extract:
         
         except Exception as e:
             raise AirflowException(f"Error when extracting data API: {str(e)}")
+        
+    @staticmethod
+    def _src_minio(table_name, **kwargs):
+        """
+        Extract data from data API.
+
+        Args:
+            ds (str): Date string.
+
+        Raises:
+            AirflowException: If failed to fetch data from data API.
+            AirflowSkipException: If no new data is found.
+        """
+        try:
+            bucket_name_src = 'file-source'
+            df = CustomMinio._get_dataframe(bucket_name_src, f'{table_name}.csv')
+            bucket_name = 'extracted-data'
+            object_name = f'/{table_name}.csv'
+            CustomMinio._put_csv(df, bucket_name, object_name)
+            
+        except AirflowSkipException as e:
+            raise e
+        
+        
+        except Exception as e:
+            raise AirflowException(f"Error when extracting data MINIO: {str(e)}")

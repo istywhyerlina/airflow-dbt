@@ -28,5 +28,10 @@
           "public",
           "investment_id"
         ]
+    },
+    "MINIO__table_to_extract_and_load": {
+        "people": "people_id",
+        "relationships": "relationship_id"
     }
-}
+
+ }

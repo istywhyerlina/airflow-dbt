@@ -13,8 +13,6 @@ SELECT
     a.price_amount as price_amount,
     a.price_currency_code as price_currency_code,
     dd.date_id as acquired_at,
-    a.source_url as source_url,
-    a.source_description as source_description,
     {{ dbt_date.now() }} as created_at,
     {{ dbt_date.now() }} as updated_at
 FROM {{ source('staging', 'acquisition') }} as a
